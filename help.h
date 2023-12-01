@@ -83,6 +83,12 @@ bool isKeyPressed(int& whichKey)   //whichKey passed as reference....
 		whichKey = 7;   // 7 if escape key is pressed
 		return true;
 	}
+	key = GetAsyncKeyState(32);  // 32 is the virtual key code for the space key
+	if (key == 1)
+	{
+		whichKey = 8;   // 8 if space key is pressed
+		return true;
+	}
 	return false;
 }
 
@@ -120,6 +126,27 @@ void myEllipse(int x1, int y1, int x2, int y2, int R, int G, int B, int fillR = 
 
 
 }
+
+void myTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int R, int G, int B, int fillR = 0, int fillG = 0, int fillB = 0)
+{
+	HWND console_handle = GetConsoleWindow();
+	HDC device_context = GetDC(console_handle);
+
+	// Change the color by changing the values in RGB (from 0-255)
+	HPEN pen = CreatePen(PS_SOLID, 2, RGB(R, G, B));
+	SelectObject(device_context, pen);
+	HBRUSH brush = CreateSolidBrush(RGB(fillR, fillG, fillB));  // Fill color is black by default
+	SelectObject(device_context, brush);
+
+	POINT points[3] = { {x1, y1}, {x2, y2}, {x3, y3} };
+
+	Polygon(device_context, points, 3);
+
+	ReleaseDC(console_handle, device_context);
+	DeleteObject(pen);
+	DeleteObject(brush);
+}
+
 
 void lettersnNumbers(char chr, int x1, int x2, int y1, int y2, int size, int R = 0, int G = 0, int B = 0) {
 	x1 += 5;
