@@ -148,6 +148,7 @@ void myTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int R, int G, in
 }
 
 
+
 void lettersnNumbers(char chr, int x1, int x2, int y1, int y2, int size, int R = 0, int G = 0, int B = 0) {
 	x1 += 5;
 	x2 -= 5;
