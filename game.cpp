@@ -121,9 +121,11 @@ bool checkBullet(int b_x, int b_y, Enemy e[], int total, bool enemyPrespective =
 		return false;
 	}
 	else {
-		if (b_x >= box_x){
+		if (b_x >= box_x-width/2 && b_x <= box_x + width/2 && b_y >= box_y-20 && b_y <= box_y + height){
 			Lives -= 1;
-			remove(b_x, b_y, 30, 30, 'e');
+			Sleep(10);
+			remove(b_x, b_y, 2, 15, 'b'); // remove the bullet when collide with player 
+
 			return true;
 		}
 		else {
@@ -138,6 +140,13 @@ void updateEnemy(Enemy e[], char direction, int total) {
 	}
 }
 
+void display_lives(int width,int height) {
+	int live_x = 800, live_y = 15;
+	for (int i = 0; i < Lives; i++) {
+		live_x += width + 20;
+		draw(live_x, live_y, width, height, 1, 'c');
+	}
+}
 
 void move_enemies(Enemy e[], int total, int r_limit, int l_limit, int b_limit, char& previous_direction) {
 	Sleep(2);
@@ -347,7 +356,7 @@ int main()
 		if (shoot_e && !state_bullet_e) {
 			for (int i = number_of_enemies-1; i > 0; i--) {
 				int distance = abs(enemies[i].x - box_x);
-				if (distance <= 30) { // checks distance among box and enemy
+				if (distance <= 30 && enemies[i].state) { // checks distance among box and enemy
 					shooter_index = i;
 					state_bullet_e = true;
 					break;
@@ -364,14 +373,12 @@ int main()
 		}
 
 		Sleep(10); // 25 milliseconds
-
 		if (shoot && !state_bullet) {
 			bullet_x = box_x;
 			bullet_y = box_y;
 			draw(bullet_x + 19, bullet_y - 35, 2, 15, 0, 'b');
 			state_bullet = true;
 		}
-
 
 		if (game_state == false) {
 			myRect(left_limit - 2, top_limit - 2, right_limit + 2, bottom_limit + 2, 139, 0, 0); // change color when user lost the game
@@ -385,7 +392,8 @@ int main()
 				shoot_bullet_enemy(bullet_x_e, bullet_y_e,box_x, box_y, bottom_limit, shoot_e, state_bullet_e,width,height); // parent is player 'p'
 			}
 			move_enemies(enemies, number_of_enemies, right_limit, left_limit, bottom_limit,previous_direction);
-			
+			display_lives(width,height);
+
 			// update header of game (includes game_score) except game name
 			if (Score != 0) { // Score doesn't show when 0 so use a string when score is 0
 				remove(score_x, score_y, right_limit / 2 - 120, 31, 'b');  // basically removes the whole header of game to update game header before Game name
